@@ -24,8 +24,12 @@ class HomeController extends GetxController {
   }
 
   Future<void> loadTodos() async {
+    try {
       final todos = await getTodos();
       todoList.assignAll(todos);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update todo');
+    }
   }
 
   Future<void> toggleTodoCompletion(TodoEntity todo, bool value) async {

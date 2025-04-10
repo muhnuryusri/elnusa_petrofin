@@ -78,7 +78,7 @@ class TodoRepositoryImpl implements TodoRepository {
   Future<TodoEntity> updateTodo(int id, TodoModel todo) async {
     try {
       final response = await apiService.updateTodo(
-        int.parse(todo.id),
+        todo.todoId,
         TodoModel(
           id: todo.id,
           todoId: todo.todoId,

@@ -21,7 +21,7 @@ class ApiService {
 
   Future<List<TodoModel>> getAllTodo() async {
     final response = await _client.get('/todos');
-    return (response.data['todos'] as List)
+    return (response.data as List<dynamic>)
         .map((json) => TodoModel.fromJson(json))
         .toList();
   }

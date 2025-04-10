@@ -11,6 +11,13 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find();
+
+    print("Todo List Length: ${controller.todoList.length}");
+    controller.todoList.forEach((todo) {
+      print(
+        "Todo => ID: ${todo.todoId}, Title: ${todo.title}, Completed: ${todo.completed}",
+      );
+    });
     return Scaffold(
       body: Stack(
         children: [
@@ -33,14 +40,12 @@ class Home extends StatelessWidget {
                           onTap: () {
                             Get.to(
                               () => TodoDetail(),
-                              arguments: {'todoId': todo.id.toString()},
+                              arguments: {'todoId': todo.todoId},
                               binding: TodoDetailBinding(),
                             );
                           },
                           isChecked: todo.completed,
-                          onCheckboxChanged: (val) {
-                            
-                          },
+                          onCheckboxChanged: (val) {},
                         );
                       },
                     ),
