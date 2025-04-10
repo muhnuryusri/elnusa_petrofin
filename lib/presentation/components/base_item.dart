@@ -27,6 +27,7 @@ class BaseItem extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const SizedBox(height: 8),
             InkWell(onTap: onTap, child: Column(

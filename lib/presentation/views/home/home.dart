@@ -1,4 +1,6 @@
 import 'package:elnusa_petrofin/presentation/components/base_item.dart';
+import 'package:elnusa_petrofin/presentation/views/add_edit/controller/todo_add_edit_binding.dart';
+import 'package:elnusa_petrofin/presentation/views/add_edit/todo_add_edit.dart';
 import 'package:elnusa_petrofin/presentation/views/detail/controller/todo_detail_binding.dart';
 import 'package:elnusa_petrofin/presentation/views/detail/todo_detail.dart';
 import 'package:elnusa_petrofin/presentation/views/home/controller/home_controller.dart';
@@ -12,12 +14,6 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeController controller = Get.find();
 
-    print("Todo List Length: ${controller.todoList.length}");
-    controller.todoList.forEach((todo) {
-      print(
-        "Todo => ID: ${todo.todoId}, Title: ${todo.title}, Completed: ${todo.completed}",
-      );
-    });
     return Scaffold(
       body: Stack(
         children: [
@@ -30,25 +26,32 @@ class Home extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 50),
-                    child: ListView.builder(
-                      itemCount: controller.todoList.length,
-                      itemBuilder: (context, index) {
-                        final todo = controller.todoList[index];
-                        return BaseItem(
-                          title: todo.title,
-                          dueDate: todo.dueDate,
-                          onTap: () {
-                            Get.to(
-                              () => TodoDetail(),
-                              arguments: {'todoId': todo.todoId},
-                              binding: TodoDetailBinding(),
-                            );
-                          },
-                          isChecked: todo.completed,
-                          onCheckboxChanged: (val) {},
-                        );
-                      },
-                    ),
+                    child: Obx(() {
+                      return ListView.builder(
+                        itemCount: controller.todoList.length,
+                        itemBuilder: (context, index) {
+                          final todo = controller.todoList[index];
+                          print(
+                            "Todo => ID: ${todo.todoId}, Title: ${todo.title}, Completed: ${todo.completed}",
+                          );
+                          return BaseItem(
+                            title: todo.title,
+                            dueDate: todo.dueDate,
+                            onTap: () {
+                              Get.to(
+                                () => TodoDetail(),
+                                arguments: {'todoId': int.parse(todo.id)},
+                                binding: TodoDetailBinding(),
+                              );
+                            },
+                            isChecked: todo.completed,
+                            onCheckboxChanged: (val) {
+                              controller.toggleTodoCompletion(todo, val ?? false);
+                            },
+                          );
+                        },
+                      );
+                    }),
                   ),
                 ),
               ],
@@ -59,7 +62,9 @@ class Home extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.only(left: 26, right: 26, bottom: 30),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => TodoAddEdit(), binding: TodoAddEditBinding());
+                },
                 child: Text("Add New Todo"),
               ),
             ),

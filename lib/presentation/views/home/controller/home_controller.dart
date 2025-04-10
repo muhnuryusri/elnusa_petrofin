@@ -42,7 +42,7 @@ class HomeController extends GetxController {
     );
 
     try {
-      final result = await updateTodo(todo.todoId, updatedTodo);
+      final result = await updateTodo(int.parse(todo.id), updatedTodo);
       final index = todoList.indexWhere((t) => t.id == todo.id);
       if (index != -1) {
         todoList[index] = result;
