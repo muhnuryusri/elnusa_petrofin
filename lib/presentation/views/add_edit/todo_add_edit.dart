@@ -17,7 +17,7 @@ class TodoAddEdit extends StatelessWidget {
         controller.initEditData(todo!);
       });
     }
-    
+
     return Scaffold(
       appBar: AppBar(title: Text(isEdit ?? false ? 'Edit Todo' : 'Add Todo')),
       body: Padding(
@@ -42,6 +42,8 @@ class TodoAddEdit extends StatelessWidget {
               const SizedBox(height: 20),
               TextFormField(
                 controller: controller.dueDateController,
+                readOnly: true,
+                onTap: () => controller.pickDueDate(context),
                 decoration: const InputDecoration(labelText: 'Due Date'),
                 validator:
                     (val) => val == null || val.isEmpty ? 'Required' : null,

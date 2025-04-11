@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:elnusa_petrofin/domain/entity/todo_entity.dart';
 import 'package:elnusa_petrofin/domain/usecase/add_todo_use_case.dart';
 import 'package:elnusa_petrofin/domain/usecase/update_todo_use_case.dart';
@@ -43,6 +44,22 @@ class TodoAddEditController extends GetxController {
     }
   }
 
+   void pickDueDate(BuildContext context) async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: today,
+      lastDate: DateTime(now.year + 5),
+    );
+
+    if (picked != null) {
+      final formatted = DateFormat('dd-MM-yyyy').format(picked);
+      dueDateController.text = formatted;
+    }
+  }
+
   Future<void> onSubmit() async {
     if (!formKey.currentState!.validate()) return;
 
@@ -56,7 +73,7 @@ class TodoAddEditController extends GetxController {
     );
 
     try {
-      if (isEdit) {
+      if (isEdit && id != null) {
         await updateTodo(int.parse(id ?? "0"), todo);
         Get.back(result: true);
         Get.snackbar("Success", "Todo updated successfully");

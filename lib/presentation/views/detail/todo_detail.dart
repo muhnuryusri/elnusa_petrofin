@@ -23,14 +23,18 @@ class TodoDetail extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightGreen,
                   ),
-                  onPressed: () {
-                    Get.to(
+                  onPressed: () async {
+                    final result = await Get.to(
                       () => TodoAddEdit(
                         isEdit: true,
                         todo: controller.todo.value,
                       ),
                       binding: TodoAddEditBinding(),
                     );
+
+                    if (result == true) {
+                      controller.onInit();
+                    }
                   },
                   child: const Text("Edit"),
                 ),
