@@ -10,7 +10,31 @@ class TodoDetail extends StatelessWidget {
     final TodoDetailController controller = Get.find();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Todo Detail")),
+      appBar: AppBar(
+        title: const Text("Todo Detail"),
+        actions: [
+          Container(
+            padding: EdgeInsets.only(right: 20),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              onPressed: () {
+                Get.defaultDialog(
+                  title: "Delete Todo",
+                  middleText: "Are you sure you want to delete this todo?",
+                  textCancel: "Cancel",
+                  textConfirm: "Delete",
+                  confirmTextColor: Colors.white,
+                  onConfirm: () {
+                    Get.back(); // tutup dialog
+                    controller.deleteTodoData();
+                  },
+                );
+              },
+              child: const Text("Delete"),
+            ),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 25),
         child: Obx(() {
@@ -23,12 +47,18 @@ class TodoDetail extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Title:", style: Theme.of(context).textTheme.titleMedium),
-              Text(todo.title, style: const TextStyle(fontSize: 16)),
+              Text(todo.title, style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 20),
+              Text(
+                todo.description ?? "",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 20),
 
-              Text("Due Date:", style: Theme.of(context).textTheme.titleMedium),
-              Text(todo.dueDate, style: const TextStyle(fontSize: 16)),
+              Text(
+                "Due Date: ${todo.dueDate}",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 20),
 
               Row(

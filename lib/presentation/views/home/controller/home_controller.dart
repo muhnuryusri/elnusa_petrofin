@@ -10,6 +10,7 @@ class HomeController extends GetxController {
   HomeController({required this.getTodos, required this.updateTodo});
 
   final todoList = <TodoEntity>[].obs;
+  final isLoading = false.obs;
 
   @override
   void onInit() async {
@@ -25,10 +26,13 @@ class HomeController extends GetxController {
 
   Future<void> loadTodos() async {
     try {
+      isLoading.value = true;
       final todos = await getTodos();
       todoList.assignAll(todos);
     } catch (e) {
       Get.snackbar('Error', 'Failed to update todo');
+    } finally {
+      isLoading.value = false;
     }
   }
 

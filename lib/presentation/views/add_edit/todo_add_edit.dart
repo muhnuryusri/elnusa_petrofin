@@ -26,17 +26,18 @@ class TodoAddEdit extends StatelessWidget {
                 validator: (val) => val == null || val.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 20),
-              TextFormField(
-                controller: controller.dueDateController,
-                decoration: const InputDecoration(labelText: 'Due Date (yyyy-MM-dd)'),
+                            TextFormField(
+                controller: controller.descriptionController,
+                decoration: const InputDecoration(labelText: 'Description'),
                 validator: (val) => val == null || val.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 20),
-              Obx(() => CheckboxListTile(
-                    title: const Text("Completed"),
-                    value: controller.completed.value,
-                    onChanged: (val) => controller.completed.value = val ?? false,
-                  )),
+              TextFormField(
+                controller: controller.dueDateController,
+                decoration: const InputDecoration(labelText: 'Due Date'),
+                validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+              ),
+              const SizedBox(height: 20),
               const Spacer(),
               ElevatedButton(
                 onPressed: controller.onSubmit,

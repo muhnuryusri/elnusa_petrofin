@@ -15,6 +15,7 @@ class TodoAddEditController extends GetxController {
   });
 
   final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
   final dueDateController = TextEditingController();
   final completed = false.obs;
 
@@ -30,10 +31,10 @@ class TodoAddEditController extends GetxController {
     final args = Get.arguments;
     if (args != null && args['todo'] != null) {
       final TodoEntity todo = args['todo'];
-      isEdit = true;
       id = todo.id;
       todoId = todo.todoId;
       titleController.text = todo.title;
+      descriptionController.text = todo.description ?? "";
       dueDateController.text = todo.dueDate;
       completed.value = todo.completed;
     }
@@ -46,8 +47,9 @@ class TodoAddEditController extends GetxController {
       id: id ?? "0",
       todoId: todoId ?? 0,
       title: titleController.text,
+      description: descriptionController.text,
       dueDate: dueDateController.text,
-      completed: completed.value,
+      completed: false,
     );
 
     try {

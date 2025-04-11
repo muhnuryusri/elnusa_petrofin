@@ -27,26 +27,35 @@ class Home extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 50),
                     child: Obx(() {
+                      if (controller.isLoading.value) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
                       return ListView.builder(
                         itemCount: controller.todoList.length,
                         itemBuilder: (context, index) {
                           final todo = controller.todoList[index];
-                          print(
-                            "Todo => ID: ${todo.todoId}, Title: ${todo.title}, Completed: ${todo.completed}",
-                          );
                           return BaseItem(
                             title: todo.title,
                             dueDate: todo.dueDate,
-                            onTap: () {
-                              Get.to(
+                            onTap: () async {
+                              final result = await Get.to(
                                 () => TodoDetail(),
                                 arguments: {'todoId': int.parse(todo.id)},
                                 binding: TodoDetailBinding(),
                               );
+
+                              if (result == true) {
+                                controller
+                                    .loadTodos();
+                              }
                             },
                             isChecked: todo.completed,
                             onCheckboxChanged: (val) {
-                              controller.toggleTodoCompletion(todo, val ?? false);
+                              controller.toggleTodoCompletion(
+                                todo,
+                                val ?? false,
+                              );
                             },
                           );
                         },

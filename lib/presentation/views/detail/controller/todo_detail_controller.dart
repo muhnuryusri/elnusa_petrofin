@@ -1,5 +1,6 @@
 import 'package:elnusa_petrofin/data/models/todo_model.dart';
 import 'package:elnusa_petrofin/domain/entity/todo_entity.dart';
+import 'package:elnusa_petrofin/domain/usecase/delete_todo_use_case.dart';
 import 'package:elnusa_petrofin/domain/usecase/get_todo_detail_use_case.dart';
 import 'package:elnusa_petrofin/domain/usecase/update_todo_use_case.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,12 @@ import 'package:get/get.dart';
 class TodoDetailController extends GetxController {
   final GetTodoDetailUseCase todoDetail;
   final UpdateTodoUseCase updateTodo;
-  TodoDetailController({required this.todoDetail, required this.updateTodo});
+  final DeleteTodoUseCase deleteTodo;
+  TodoDetailController({
+    required this.todoDetail,
+    required this.updateTodo,
+    required this.deleteTodo,
+  });
 
   final todo = Rxn<TodoEntity>();
   final errorMessage = ''.obs;
@@ -17,13 +23,13 @@ class TodoDetailController extends GetxController {
     super.onInit();
     final todoId = Get.arguments['todoId'];
     if (todoId != null) {
-      getFeedbackDetail(todoId);
+      getTodoDetail(todoId);
     } else {
-      errorMessage.value = 'Feedback ID is missing';
+      errorMessage.value = 'Todo ID is missing';
     }
   }
 
-  Future<void> getFeedbackDetail(int id) async {
+  Future<void> getTodoDetail(int id) async {
     try {
       final result = await todoDetail(id);
       todo.value = result;
@@ -34,6 +40,7 @@ class TodoDetailController extends GetxController {
 
   Future<void> updateTodoDetail({
     String? title,
+    String? description,
     String? dueDate,
     bool? completed,
   }) async {
@@ -44,16 +51,29 @@ class TodoDetailController extends GetxController {
       id: current.id,
       todoId: current.todoId,
       title: title ?? current.title,
+      description: description ?? current.description,
       dueDate: dueDate ?? current.dueDate,
       completed: completed ?? current.completed,
     );
 
     try {
-      final result = await updateTodo(current.todoId, updated);
+      final result = await updateTodo(int.parse(current.id), updated);
       todo.value = result;
-      Get.snackbar('Success', 'Todo updated successfully');
+      Get.back(result: true);
+      Get.snackbar('Success', 'Todo completed');
     } catch (e) {
       Get.snackbar('Error', 'Failed to update todo');
+    }
+  }
+
+  Future<void> deleteTodoData() async {
+    if (todo.value == null) return;
+    try {
+      await deleteTodo(int.parse(todo.value!.id));
+      Get.back(result: true);
+      Get.snackbar('Success', 'Todo deleted');
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to delete todo');
     }
   }
 }
