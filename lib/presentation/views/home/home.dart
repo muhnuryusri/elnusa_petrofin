@@ -1,3 +1,4 @@
+import 'package:elnusa_petrofin/core/constants/sort_type.dart';
 import 'package:elnusa_petrofin/presentation/components/base_item.dart';
 import 'package:elnusa_petrofin/presentation/views/add_edit/controller/todo_add_edit_binding.dart';
 import 'package:elnusa_petrofin/presentation/views/add_edit/todo_add_edit.dart';
@@ -15,6 +16,28 @@ class Home extends StatelessWidget {
     final HomeController controller = Get.find();
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Todo List'),
+        actions: [
+          Obx(() {
+            return Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: IconButton(
+                icon: Icon(
+                  controller.sortType.value == SortType.newest
+                      ? Icons.arrow_downward
+                      : Icons.arrow_upward,
+                ),
+                tooltip:
+                    controller.sortType.value == SortType.newest
+                        ? 'Sort: Newest'
+                        : 'Sort: Oldest',
+                onPressed: controller.toggleSort,
+              ),
+            );
+          }),
+        ],
+      ),
       body: Stack(
         children: [
           Padding(
@@ -22,7 +45,6 @@ class Home extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Todo List", style: TextStyle(fontSize: 25)),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 50),
@@ -46,8 +68,7 @@ class Home extends StatelessWidget {
                               );
 
                               if (result == true) {
-                                controller
-                                    .loadTodos();
+                                controller.loadTodos();
                               }
                             },
                             isChecked: todo.completed,
@@ -71,8 +92,14 @@ class Home extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.only(left: 26, right: 26, bottom: 30),
               child: ElevatedButton(
-                onPressed: () {
-                  Get.to(() => TodoAddEdit(), binding: TodoAddEditBinding());
+                onPressed: () async {
+                  final result = await Get.to(
+                    () => TodoAddEdit(),
+                    binding: TodoAddEditBinding(),
+                  );
+                  if (result == true) {
+                    controller.loadTodos();
+                  }
                 },
                 child: Text("Add New Todo"),
               ),

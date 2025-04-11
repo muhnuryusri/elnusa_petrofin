@@ -1,3 +1,5 @@
+import 'package:elnusa_petrofin/presentation/views/add_edit/controller/todo_add_edit_binding.dart';
+import 'package:elnusa_petrofin/presentation/views/add_edit/todo_add_edit.dart';
 import 'package:elnusa_petrofin/presentation/views/detail/controller/todo_detail_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,22 +17,41 @@ class TodoDetail extends StatelessWidget {
         actions: [
           Container(
             padding: EdgeInsets.only(right: 20),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {
-                Get.defaultDialog(
-                  title: "Delete Todo",
-                  middleText: "Are you sure you want to delete this todo?",
-                  textCancel: "Cancel",
-                  textConfirm: "Delete",
-                  confirmTextColor: Colors.white,
-                  onConfirm: () {
-                    Get.back(); // tutup dialog
-                    controller.deleteTodoData();
+            child: Row(
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lightGreen,
+                  ),
+                  onPressed: () {
+                    Get.to(
+                      () => TodoAddEdit(
+                        isEdit: true,
+                        todo: controller.todo.value,
+                      ),
+                      binding: TodoAddEditBinding(),
+                    );
                   },
-                );
-              },
-              child: const Text("Delete"),
+                  child: const Text("Edit"),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: () {
+                    Get.defaultDialog(
+                      title: "Delete Todo",
+                      middleText: "Are you sure you want to delete this todo?",
+                      textCancel: "Cancel",
+                      textConfirm: "Delete",
+                      confirmTextColor: Colors.white,
+                      onConfirm: () {
+                        Get.back();
+                        controller.deleteTodoData();
+                      },
+                    );
+                  },
+                  child: const Text("Delete"),
+                ),
+              ],
             ),
           ),
         ],

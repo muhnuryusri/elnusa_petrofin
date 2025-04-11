@@ -1,3 +1,4 @@
+import 'package:elnusa_petrofin/core/constants/sort_type.dart';
 import 'package:elnusa_petrofin/data/models/todo_model.dart';
 import 'package:elnusa_petrofin/domain/entity/todo_entity.dart';
 import 'package:elnusa_petrofin/domain/usecase/get_todo_list_use_case.dart';
@@ -10,7 +11,10 @@ class HomeController extends GetxController {
   HomeController({required this.getTodos, required this.updateTodo});
 
   final todoList = <TodoEntity>[].obs;
+  final sortedList = <TodoEntity>[].obs;
   final isLoading = false.obs;
+
+  final sortType = SortType.newest.obs;
 
   @override
   void onInit() async {
@@ -23,6 +27,20 @@ class HomeController extends GetxController {
     loadTodos();
     super.onReady();
   }
+
+  void toggleSort() {
+    sortType.value =
+        sortType.value == SortType.newest ? SortType.oldest : SortType.newest;
+    applySort();
+  }
+
+void applySort() {
+  if (sortType.value == SortType.newest) {
+    sortedList.assignAll(todoList);
+  } else {
+    sortedList.assignAll(todoList.reversed.toList());
+  }
+}
 
   Future<void> loadTodos() async {
     try {

@@ -9,10 +9,7 @@ class TodoAddEditController extends GetxController {
   final AddTodoUseCase addTodo;
   final UpdateTodoUseCase updateTodo;
 
-  TodoAddEditController({
-    required this.addTodo,
-    required this.updateTodo,
-  });
+  TodoAddEditController({required this.addTodo, required this.updateTodo});
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -24,6 +21,12 @@ class TodoAddEditController extends GetxController {
   bool isEdit = false;
   String? id;
   int? todoId;
+
+  void initEditData(TodoEntity todo) {
+    titleController.text = todo.title;
+    descriptionController.text = todo.description ?? '';
+    dueDateController.text = todo.dueDate;
+  }
 
   @override
   void onInit() {
@@ -53,14 +56,15 @@ class TodoAddEditController extends GetxController {
     );
 
     try {
-      if (isEdit && todoId != null) {
-        await updateTodo(todoId!, todo);
+      if (isEdit) {
+        await updateTodo(int.parse(id ?? "0"), todo);
+        Get.back(result: true);
         Get.snackbar("Success", "Todo updated successfully");
       } else {
         await addTodo(todo);
+        Get.back(result: true);
         Get.snackbar("Success", "Todo added successfully");
       }
-      Get.back();
     } catch (e) {
       Get.snackbar("Error", "Failed to submit todo");
     }
