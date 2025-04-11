@@ -19,7 +19,12 @@ class TodoAddEditController extends GetxController {
 
   final formKey = GlobalKey<FormState>();
 
-  bool isEdit = false;
+  final isEdit = false.obs;
+
+  void setEdit(bool value) {
+    isEdit.value = value;
+  }
+
   String? id;
   int? todoId;
 
@@ -73,8 +78,8 @@ class TodoAddEditController extends GetxController {
     );
 
     try {
-      if (isEdit && id != null) {
-        await updateTodo(int.parse(id ?? "0"), todo);
+      if (isEdit.value) {
+        await updateTodo(int.parse(todo.id), todo);
         Get.back(result: true);
         Get.snackbar("Success", "Todo updated successfully");
       } else {

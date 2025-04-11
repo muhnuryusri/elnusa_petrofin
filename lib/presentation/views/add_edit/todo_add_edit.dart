@@ -11,6 +11,7 @@ class TodoAddEdit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TodoAddEditController>();
+    controller.setEdit(isEdit ?? false);
 
     if (isEdit == true && todo != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
